@@ -1,4 +1,4 @@
-app = "my-remix-app-acc8"
+app = "kn-indie-stack-template"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = [ ]
