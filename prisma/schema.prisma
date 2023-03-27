@@ -41,15 +41,15 @@ model Note {
 
 model Graduate {
   id    String @id @default(cuid())
-  email String @unique
+  email String? @unique
   firstName String
-  maidenName String
+  maidenName String?
   lastName String
-  addressStreet String
-  addressCity String
-  addressState String
-  AddressZip String
-  graduationYear String
+  addressStreet String?
+  addressCity String?
+  addressState String?
+  addressZip String?
+  graduationYear String @default("1990")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

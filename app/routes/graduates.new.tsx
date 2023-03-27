@@ -7,7 +7,9 @@ import { createGraduate } from "~/models/graduate.server";
 
 export async function action({ request }: ActionArgs) {
   const formData = await request.formData();
+  const email = formData.get("email");
   const firstName = formData.get("firstName");
+  const maidenName = formData.get("maidenName");
   const lastName = formData.get("lastName");
 
   if (typeof firstName !== "string" || firstName.length === 0) {
@@ -24,7 +26,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const graduate = await createGraduate({ firstName, lastName });
+  const graduate = await createGraduate({ email, firstName, maidenName, lastName, addressStreet: '', addressCity: '', addressState: '', addressZip: '', graduationYear: '1955'  });
 
   return redirect(`/graduates/${graduate.id}`);
 }
@@ -32,13 +34,18 @@ export async function action({ request }: ActionArgs) {
 export default function NewNotePage() {
   const actionData = useActionData<typeof action>();
   const firstNameRef = React.useRef<HTMLInputElement>(null);
+  const maidenNameRef = React.useRef<HTMLInputElement>(null);
   const lastNameRef = React.useRef<HTMLInputElement>(null);
+  const emailRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
-    if (actionData?.errors?.title) {
+    if (actionData?.errors?.firstName) {
       firstNameRef.current?.focus();
-    } else if (actionData?.errors?.body) {
+    } else if (actionData?.errors?.lastName) {
       lastNameRef.current?.focus();
+    }
+    else if (actionData?.errors?.maidenName) {
+      maidenNameRef.current?.focus();
     }
   }, [actionData]);
 
@@ -59,15 +66,35 @@ export default function NewNotePage() {
             ref={firstNameRef}
             name="firstName"
             className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
-            aria-invalid={actionData?.errors?.title ? true : undefined}
+            aria-invalid={actionData?.errors?.firstName ? true : undefined}
             aria-errormessage={
-              actionData?.errors?.title ? "title-error" : undefined
+              actionData?.errors?.firstName ? "title-error" : undefined
             }
           />
         </label>
-        {actionData?.errors?.title && (
+        {actionData?.errors?.firstName && (
           <div className="pt-1 text-red-700" id="title-error">
-            {actionData.errors.title}
+            {actionData.errors.firstName}
+          </div>
+        )}
+      </div>
+
+      <div>
+        <label className="flex w-full flex-col gap-1">
+          <span>Maiden Name: </span>
+          <input
+            ref={maidenNameRef}
+            name="maidenName"
+            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+            aria-invalid={actionData?.errors?.maidenName ? true : undefined}
+            aria-errormessage={
+              actionData?.errors?.maidenName ? "title-error" : undefined
+            }
+          />
+        </label>
+        {actionData?.errors?.maidenName && (
+          <div className="pt-1 text-red-700" id="title-error">
+            {actionData.errors.maidenName}
           </div>
         )}
       </div>
@@ -78,17 +105,36 @@ export default function NewNotePage() {
           <input
             ref={lastNameRef}
             name="lastName"
-            rows={8}
             className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
-            aria-invalid={actionData?.errors?.body ? true : undefined}
+            aria-invalid={actionData?.errors?.lastName ? true : undefined}
             aria-errormessage={
-              actionData?.errors?.body ? "body-error" : undefined
+              actionData?.errors?.lastName ? "body-error" : undefined
             }
           />
         </label>
-        {actionData?.errors?.body && (
+        {actionData?.errors?.lastName && (
           <div className="pt-1 text-red-700" id="body-error">
-            {actionData.errors.body}
+            {actionData.errors.lastName}
+          </div>
+        )}
+      </div>
+
+      <div>
+        <label className="flex w-full flex-col gap-1">
+          <span>Email: </span>
+          <input
+            ref={emailRef}
+            name="email"
+            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+            aria-invalid={actionData?.errors?.email ? true : undefined}
+            aria-errormessage={
+              actionData?.errors?.email ? "title-error" : undefined
+            }
+          />
+        </label>
+        {actionData?.errors?.email && (
+          <div className="pt-1 text-red-700" id="email-error">
+            {actionData.errors.email}
           </div>
         )}
       </div>

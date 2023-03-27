@@ -17,19 +17,33 @@ export function getGraduate({
 
 export function getGraduateListItems() {
   return prisma.graduate.findMany({
-    select: { id: true },
+    select: { id: true, firstName: true, lastName: true },
     orderBy: { updatedAt: "desc" },
   });
 }
 
 export function createGraduate({
+  email,
   firstName,
+  maidenName,
   lastName,
-}: Pick<Graduate, "firstName" | "lastName">) {
+  addressStreet,
+  addressCity,
+  addressState,
+  addressZip,
+  graduationYear
+}: Pick<Graduate, "firstName" | "maidenName" | "lastName">) {
   return prisma.graduate.create({
     data: {
+      email,
       firstName,
+      maidenName,
       lastName,
+      addressStreet,
+      addressCity,
+      addressState,
+      addressZip,
+      graduationYear
     },
   });
 }
